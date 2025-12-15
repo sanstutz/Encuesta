@@ -81,12 +81,19 @@ def main():
 # asigna las variables globales que requieren algun calculo para obtener el valor
 def initialize():
     global DIAS
-    global MATERIAS
-    global NOMBRES_MATERIAS
+
     # cantidad de dias
     DIAS = date_to_int(END, START, END) - date_to_int(START, START, END) + 1
 
-    # codigos
+    initialize_codigos()
+
+    initialize_materias()
+
+
+
+def initialize_codigos():
+    global CODIGOS
+
     try:
         archivo_codigos = open("codigos.txt", 'rt')
         for line in archivo_codigos:
@@ -126,7 +133,12 @@ def initialize():
         exit()
     archivo_codigos.close()
 
-    # nombres materias
+
+def initialize_materias():
+    global NOMBRES_MATERIAS
+    global MATERIAS
+
+    # nombres
     try:
         archivo_nombres = open("nombres_materias.txt", 'rt')
         for line in archivo_nombres:

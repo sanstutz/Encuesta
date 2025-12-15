@@ -134,23 +134,14 @@ def create_file():
     # revisar que la ruta sea valida y exista, si no es valida pasa a la por defecto y si no existe la crea
     if len(path) > 0:  # no es ruta por defecto
         path = path.replace('\\', '/')  # ya se que Windows usa \ pero las dos barras funcionan
-        # crear directorios, os.mkdir() sirve para crear un directorio por vez, por eso voy uno a uno
-        directorios = path.split('/')  # cada directorio en la ruta
-        # si era una ruta absoluta en Windows, sera la particion (C:, D:, o lo que sea)
-        dire = ""
-        for d in directorios:
-            dire += d + '/'
-            if not os.path.exists(dire):
-                try:
-                    os.mkdir(dire)
-                except PermissionError:
-                    print("Error: no hay permisos para crear esa ruta.")
-                    return None
-                except OSError:  # esta tambien incluye permisos, pero quiero separar los tipos de errores
-                    print("Error: la ruta ingresada no es valida.")
-                    return None
+
+        os.makedirs(path, exist_ok=True)
+
         if path[-1:] != '/':  # si la ruta no termina en / la agrego para poder concatenar
             path = path + '/'
+    else:
+        path = "resultados/"
+        os.makedirs(path, exist_ok=True)
     # revisar que el archivo no exista
     if os.path.exists(path + name):
         op = input("El archivo ya existe, si crea un nuevo archivo se perderan los datos anteriores. "
