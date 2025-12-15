@@ -1,0 +1,110 @@
+0: Algebra I T
+1: Algebra II T
+2: Al. y E. de Datos I T
+3: An. Funcional T
+4: An. Mat. I T
+5: Calculo I T
+6: An. Mat. II T
+7: Calculo II T
+8: An. Num. II T
+9: An. Num. III T
+10: Arq. de Comp. T
+11: Astrofisica I T
+12: Astrometria T
+13: Astron. Esferica T
+14: Bases de Datos T
+15: Ec. Dif. II (LM) T
+16: Ec. Dif. II (LMA) T
+17: Electromag. II T
+18: Elem. de Fis. T
+19: Elem. Func. Cmpl. T
+20: Est. Algebraicas T
+21: Fisica (LCC) T
+22: Fis. Cont. T
+23: Fis. Exp. II T
+24: Fis. Exp. IV T
+25: Fis. Gral. I T
+26: Fis. Gral. III T
+27: Fisica I (LMA) T
+28: Func. Analit. T
+29: Func. Complejas T
+30: Geometria I T
+31: Geom. Dif. T
+32: Ges. de Proy. T
+33: Ing. del Soft. I T
+34: Intr. Astrofisica T
+35: Intr. Fisica T
+36: Intr. Logica Comp. T
+37: Intr. Algor. T
+38: P. y Estadis. T
+39: Lab. Term. y Elec. T
+40: Logica T
+41: Mat. Dis. I T
+42: Mat. Finan. T
+43: Mecanica T
+44: Mec. Cel. I T
+45: Mec. Clasica T
+46: Mec. Cuant. II T
+47: Met. Mat. Fis. I T
+48: Optimizacion T
+49: Probabilidad T
+50: Sist. de Control T
+51: Sist. Operativos T
+52: Term. Mec. Est. II T
+53: Especialidad T
+54: Trabajo Especial T
+55: Algebra I P
+56: Algebra II P
+57: Al. y E. de Datos I P
+58: An. Funcional P
+59: An. Mat. I P
+60: Calculo I P
+61: An. Mat. II P
+62: Calculo II P
+63: An. Num. II P
+64: An. Num. III P
+65: Arq. de Comp. P
+66: Astrofisica I P
+67: Astrometria P
+68: Astron. Esferica T
+69: Bases de Datos P
+70: Ec. Dif. II (LM) P
+71: Ec. Dif. II (LMA) P
+72: Electromag. II P
+73: Elem. de Fis. P
+74: Elem. Func. Cmpl. P
+75: Est. Algebraicas P
+76: Fisica (LCC) P
+77: Fis. Cont. P
+78: Fis. Exp. II P
+79: Fis. Exp. IV P
+80: Fis. Gral. I P
+81: Fis. Gral. III P
+82: Fisica I (LMA) P
+83: Func. Analit. P
+84: Func. Complejas P
+85: Geometria I P
+86: Geom. Dif. P
+87: Ges. de Proy. P
+88: Ing. del Soft. I P
+89: Intr. Astrofisica P
+90: Intr. Fisica P
+91: Intr. Logica Comp. P
+92: Intr. Algor. P
+93: P. y Estadis. P
+94: Lab. Term. y Elec. P
+95: Logica P
+96: Mat. Dis. I P
+97: Mat. Finan. P
+98: Mecanica P
+99: Mec. Cel. I P
+100: Mec. Clasica P
+101: Mec. Cuant. II P
+102: Met. Mat. Fis. I P
+103: Optimizacion P
+104: Probabilidad P
+105: Sist. de Control P
+106: Sist. Operativos P
+107: Term. Mec. Est. II P
+108: Especialidad P
+109: Trabajo Especial P
