@@ -4,6 +4,7 @@ from json import JSONDecodeError
 
 from src.selectores.SelectorCodigos import SelectorArchivoCodigos
 from src.selectores.CargadorMaterias import cargar_materias
+from src.parseadores.ParseadorTerminal import *
 from src.respuestas.LectorRespuestas import LectorRespuestas
 
 from src.utils import *
@@ -46,25 +47,25 @@ def main():
             print("Ingrese solo el numero de la opcion.")
             continue
         if opcion == 1:
-            llamar_opcion_1(resultado_respuestas)
+            llamar_opcion_1(resultado_respuestas, config, argumentos)
         elif opcion == 2:
-            llamar_opcion_2(resultado_respuestas)
+            llamar_opcion_2(resultado_respuestas, config, argumentos)
         elif opcion == 3:
-            llamar_opcion_3(resultado_respuestas)
+            llamar_opcion_3(resultado_respuestas, config, argumentos)
         elif opcion == 4:
-            total_horas_por_materia_por_codigo(resultado_respuestas)
+            llamar_opcion_4(resultado_respuestas, config, argumentos)
         elif opcion == 5:
-            total_horas_por_semana_por_codigo(resultado_respuestas)
+            llamar_opcion_5(resultado_respuestas, config, argumentos)
         elif opcion == 6:
-            total_horas_por_materia_por_semana(resultado_respuestas)
+            llamar_opcion_6(resultado_respuestas, config, argumentos)
         elif opcion == 7:
-            total_codigos_por_materia_por_semana(resultado_respuestas)
+            llamar_opcion_7(resultado_respuestas, config, argumentos)
         elif opcion == 8:
-            registros_por_codigo(resultado_respuestas)
+            llamar_opcion_8(resultado_respuestas, config, argumentos)
         elif opcion == 9:
-            registros_por_semana(resultado_respuestas)
+            llamar_opcion_9(resultado_respuestas, config, argumentos)
         elif opcion == 10:
-            codigos_por_semana(resultado_respuestas)
+            llamar_opcion_10(resultado_respuestas, config, argumentos)
         elif opcion != 0:
             print("Codigo invalido")
 
@@ -206,38 +207,140 @@ def listar_opciones():
           '0: Salir.')
 
 
-def llamar_opcion_1(resultado_respuestas):
+def obtener_archivo_manual(argumentos, config):
+    nombre, ruta = solicitar_nombre_y_ruta(
+        "Ingrese el nombre del archivo (con extension) donde se guardaran los datos: ",
+        "Ingrese la ruta donde se guardara el archivo o presione enter para usar la ruta por defecto: ")
+    if ruta == "":
+        ruta = obtener_parametro("ruta_resultados_default", argumentos, config, None)
+    file = crear_archivo(nombre, ruta)
+    return file
+
+
+def llamar_opcion_1(resultado_respuestas, config, argumentos):
     materias = resultado_respuestas.obtener_materias()
     listar_materias(materias)
-    materia = -1
-    while not (0 <= materia < len(materias)):
-        try:
-            materia = int(input("Ingrese el codigo de la materia: ")) - 1
-        except ValueError:
-            print("Codigo Invalido.")
-            continue
-    horas_por_codigo_por_fecha(materia, resultado_respuestas)
+
+    materias_seleccionadas = None
+    while materias_seleccionadas is None or len(materias_seleccionadas) == 0:
+        inputs = input("Ingrese la(s) materia(s) separadas por coma: ")
+        materias_seleccionadas = parsear_materias(inputs, len(materias))
+        if materias_seleccionadas is not None and len(materias_seleccionadas) == 0:
+            print("Ingrese al menos una materia")
+
+    if len(materias_seleccionadas) == 1:
+        file = obtener_archivo_manual(argumentos, config)
+        if file is not None:
+            horas_por_codigo_por_fecha(materias_seleccionadas[0], resultado_respuestas, file)
+    else:
+        ruta = input("Ingrese la ruta donde se guardara el archivo o presione enter para usar la ruta por defecto: ")
+        if ruta == "":
+            ruta = obtener_parametro("ruta_resultados_default", argumentos, config, None)
+        overwrite = input("Ingrese 'S' para sobreescribir todos los archivos existentes u otro caracter para preguntar"
+                          "por cada uno: ") == 'S'
+        for m in materias_seleccionadas:
+            file = crear_archivo(f"op1_{materias[m].nombre_sin_espacios}.txt", ruta, overwrite)
+            if file is None:
+                print(f"No se pudo crear el archivo op1_{materias[m].nombre_sin_espacios}.txt en la ruta {ruta}.")
+                continue
+            horas_por_codigo_por_fecha(m, resultado_respuestas, file)
 
 
-def llamar_opcion_2(resultado_respuestas):
+def llamar_opcion_2(resultado_respuestas, config, argumentos):
     materias = resultado_respuestas.obtener_materias()
     listar_materias(materias)
-    materia = -1
-    while not (0 <= materia < len(materias)):
-        try:
-            materia = int(input("Ingrese el codigo de la materia: ")) - 1
-        except ValueError:
-            print("Codigo Invalido.")
-            continue
-    horas_por_codigo_por_semana(materia, resultado_respuestas)
+
+    materias_seleccionadas = None
+    while materias_seleccionadas is None or len(materias_seleccionadas) == 0:
+        inputs = input("Ingrese la(s) materia(s) separadas por coma: ")
+        materias_seleccionadas = parsear_materias(inputs, len(materias))
+        if materias_seleccionadas is not None and len(materias_seleccionadas) == 0:
+            print("Ingrese al menos una materia")
+
+    if len(materias_seleccionadas) == 1:
+        file = obtener_archivo_manual(argumentos, config)
+        if file is not None:
+            horas_por_codigo_por_semana(materias_seleccionadas[0], resultado_respuestas, file)
+    else:
+        ruta = input("Ingrese la ruta donde se guardara el archivo o presione enter para usar la ruta por defecto: ")
+        if ruta == "":
+            ruta = obtener_parametro("ruta_resultados_default", argumentos, config, None)
+        overwrite = input("Ingrese 'S' para sobreescribir todos los archivos existentes u otro caracter para preguntar"
+                          "por cada uno: ") == 'S'
+        for m in materias_seleccionadas:
+            file = crear_archivo(f"op2_{materias[m].nombre_sin_espacios}.txt", ruta, overwrite)
+            if file is None:
+                print(f"No se pudo crear el archivo op1_{materias[m].nombre_sin_espacios}.txt en la ruta {ruta}.")
+                continue
+            horas_por_codigo_por_semana(m, resultado_respuestas, file)
 
 
-def llamar_opcion_3(resultado_respuestas):
-    codigo = input("Ingrese el codigo de alumno: ").upper()
-    while not resultado_respuestas.incluye_codigo(codigo):
-        codigo = input("El codigo no esta incluido en las respuestas. Ingrese un codigo valido: ").upper()
-    horas_por_materia_por_fecha(codigo, resultado_respuestas)
+def llamar_opcion_3(resultado_respuestas, config, argumentos):
+    codigos_seleccionados = None
+    while codigos_seleccionados is None or len(codigos_seleccionados) == 0:
+        inputs = input("Ingrese el/los codigos de los alumnos separados por coma: ")
+        codigos_seleccionados = parsear_codigos(inputs, resultado_respuestas.obtener_codigos())
+        if codigos_seleccionados is not None and len(codigos_seleccionados) == 0:
+            print("Ingrese al menos un codigo")
 
+    if len(codigos_seleccionados) == 1:
+        file = obtener_archivo_manual(argumentos, config)
+        if file is not None:
+            horas_por_materia_por_fecha(codigos_seleccionados[0], resultado_respuestas, file)
+    else:
+        ruta = input("Ingrese la ruta donde se guardara el archivo o presione enter para usar la ruta por defecto: ")
+        if ruta == "":
+            ruta = obtener_parametro("ruta_resultados_default", argumentos, config, None)
+        overwrite = input("Ingrese 'S' para sobreescribir todos los archivos existentes u otro caracter para preguntar"
+                          "por cada uno: ") == 'S'
+        for codigo in codigos_seleccionados:
+            file = crear_archivo(f"op3_{codigo}.txt", ruta, overwrite)
+            if file is None:
+                print(f"No se pudo crear el archivo op3_{codigo}.txt en la ruta {ruta}.")
+                continue
+            horas_por_materia_por_fecha(codigo, resultado_respuestas, file)
+
+
+def llamar_opcion_4(resultado_respuestas, config, argumentos):
+    file = obtener_archivo_manual(argumentos, config)
+    if file is not None:
+        total_horas_por_materia_por_codigo(resultado_respuestas, file)
+
+
+def llamar_opcion_5(resultado_respuestas, config, argumentos):
+    file = obtener_archivo_manual(argumentos, config)
+    if file is not None:
+        total_horas_por_semana_por_codigo(resultado_respuestas, file)
+
+
+def llamar_opcion_6(resultado_respuestas, config, argumentos):
+    file = obtener_archivo_manual(argumentos, config)
+    if file is not None:
+        total_horas_por_materia_por_semana(resultado_respuestas, file)
+
+
+def llamar_opcion_7(resultado_respuestas, config, argumentos):
+    file = obtener_archivo_manual(argumentos, config)
+    if file is not None:
+        total_codigos_por_materia_por_semana(resultado_respuestas, file)
+
+
+def llamar_opcion_8(resultado_respuestas, config, argumentos):
+    file = obtener_archivo_manual(argumentos, config)
+    if file is not None:
+        registros_por_codigo(resultado_respuestas, file)
+
+
+def llamar_opcion_9(resultado_respuestas, config, argumentos):
+    file = obtener_archivo_manual(argumentos, config)
+    if file is not None:
+        registros_por_semana(resultado_respuestas, file)
+
+
+def llamar_opcion_10(resultado_respuestas, config, argumentos):
+    file = obtener_archivo_manual(argumentos, config)
+    if file is not None:
+        codigos_por_semana(resultado_respuestas, file)
 
 if __name__ == '__main__':
     main()

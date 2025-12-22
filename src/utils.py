@@ -11,12 +11,20 @@ def obtener_parametro(nombre, argumentos, config, input_manual, validador=None, 
     elif config is not None and nombre in config:
         valor = config[nombre]
     # por ultimo solicitarlo manualmente
-    else:
+    elif input_manual is not None:
         valor = input_manual()
         if reintentar_manual and validador is not None:
             while not validador(valor):
                 print(error_msg.replace("{nombre}", nombre).replace("{valor}", str(valor)))
                 valor = input_manual()
+    else:
+        if cerrar_con_error:
+            cerrar_programa_con_error(f"No se encontro el parametro {nombre} y no se proporciono un metodo "
+                                      f"para solicitarlo manualmente.")
+        else:
+            print(f"No se encontro el parametro {nombre} y no se proporciono un metodo "
+                  f"para solicitarlo manualmente.")
+            return None
     if validador is None or validador(valor):
         return valor
     elif cerrar_con_error:
@@ -26,36 +34,36 @@ def obtener_parametro(nombre, argumentos, config, input_manual, validador=None, 
         return None
 
 
-# llamada en todas las opciones para crear el archivo donde se guardan los datos
-def create_file():
-    name = input("Ingrese el nombre del archivo (con extension) donde se guardaran los datos: ")
-    while name == "":
+def solicitar_nombre_y_ruta(msg_archivo, msg_ruta):
+    # "Ingrese el nombre del archivo (con extension) donde se guardaran los datos: "
+    archivo = input(msg_archivo)
+    while archivo == "":
         print("No se puede guardar un archivo con nombre vacio.")
-        name = input("Ingrese el nombre del archivo (con extension) donde se guardaran los datos: ")
-    path = input("Ingrese la ruta donde se guardara el archivo, o presione enter para guardar en la ruta por defecto: ")
+        archivo = input(msg_archivo)
+    #
+    ruta = input(msg_ruta)
+    return archivo, ruta
 
+
+# llamada en todas las opciones para crear el archivo donde se guardan los datos
+def crear_archivo(nombre, ruta, overwrite=False):
     # revisar que la ruta sea valida y exista, si no es valida pasa a la por defecto y si no existe la crea
-    if len(path) > 0:  # no es ruta por defecto
-        path = path.replace('\\', '/')  # ya se que Windows usa \ pero las dos barras funcionan
-
-        os.makedirs(path, exist_ok=True)
-
-        if path[-1:] != '/':  # si la ruta no termina en / la agrego para poder concatenar
-            path = path + '/'
-    else:
-        path = "resultados/"
-        os.makedirs(path, exist_ok=True)
+    if len(ruta) > 0:  # no es ruta por defecto
+        ruta = ruta.replace('\\', '/')  # ya se que Windows usa \ pero las dos barras funcionan
+        os.makedirs(ruta, exist_ok=True)
+    if ruta[-1:] != '/':  # si la ruta no termina en / la agrego para poder concatenar
+        ruta = ruta + '/'
     # revisar que el archivo no exista
-    if os.path.exists(path + name):
+    if os.path.exists(ruta + nombre) and not overwrite:
         op = input("El archivo ya existe, si crea un nuevo archivo se perderan los datos anteriores. "
-                   "Ingrese 1 para confirmar o cualquier otro caracter para cancelar: ")
-        if op != '1':
+                   "Ingrese 'S' para continuar o cualquier otro caracter para cancelar: ")
+        if op != 'S':
             print("Operacion cancelada.")
             return None
     try:
-        return open(path + name, 'wt')
+        return open(ruta + nombre, 'wt')
     except PermissionError:
-        print("Error: el programa no tiene permisos para crear el archivo en la ruta " + path)
+        print("Error: el programa no tiene permisos para crear el archivo en la ruta " + ruta)
         return None  # podria volver a llamar la funcion para que empieze de nuevo pero no me quiero meter en
         # recursividad, mejor que vuelva al menu y el usuario decida si quiere volver a intentar
 

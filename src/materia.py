@@ -1,7 +1,8 @@
 class Materia:
-    def __init__(self, columna, nombre_corto):
+    def __init__(self, columna, nombre_corto, nombre_sin_espacios):
         self.columna = columna
         self.nombre_corto = nombre_corto
+        self.nombre_sin_espacios = nombre_sin_espacios
 
     def __eq__(self, other):
         if not isinstance(other, Materia):

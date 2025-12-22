@@ -4,7 +4,7 @@ from src.materia import Materia
 
 def cargar_materias(archivo_lista_materias, archivo_incluidas):
     materias_data = json.load(archivo_lista_materias)
-    materias = [Materia(m["columna"], m["nombre_corto"]) for m in materias_data]
+    materias = [Materia(m["columna"], m["nombre_corto"], m["nombre_sin_espacios"]) for m in materias_data]
 
     if len(materias) == 0:
         raise ValueError("El archivo de materias no contiene materias validas")

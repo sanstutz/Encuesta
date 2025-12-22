@@ -1,14 +1,10 @@
-from src.utils import create_file, mostrar_ruta_archivo, date_to_int, int_to_date, day_to_week
+from src.utils import crear_archivo, mostrar_ruta_archivo, date_to_int, int_to_date, day_to_week
 
 
 # 1. horas de estudio en una materia por cada alumno en funcion de la fecha
-def horas_por_codigo_por_fecha(materia, respuestas):
+def horas_por_codigo_por_fecha(materia, respuestas, file):
     # fecha    cod1    cod2    codn
     # celda ij = data[j][materia][i]
-    file = create_file()
-    if file is None:
-        return
-
     codigos = respuestas.obtener_codigos()
 
     file.write("{:<}".format('Fecha'))
@@ -22,16 +18,12 @@ def horas_por_codigo_por_fecha(materia, respuestas):
         for c in codigos:
             file.write(f"{respuestas.obtener_respuestas(c)[materia][i]:>6}")
         file.write('\n')
-    file.close()
+
     mostrar_ruta_archivo(file)
 
 
 # 2 horas de estudio en una materia por cada alumno por semana en vez de por dia
-def horas_por_codigo_por_semana(materia, respuestas):
-    file = create_file()
-    if file is None:
-        return
-
+def horas_por_codigo_por_semana(materia, respuestas, file):
     codigos = respuestas.obtener_codigos()
     cant_dias = respuestas.obtener_cant_dias()
 
@@ -53,19 +45,14 @@ def horas_por_codigo_por_semana(materia, respuestas):
             file.write(f"{suma:>7}")
         file.write('\n')
 
-    file.close()
     mostrar_ruta_archivo(file)
 
 
 
 # 3. horas de estudio de un alumno en cada materia en funcion de la fecha
-def horas_por_materia_por_fecha(codigo, respuestas):
+def horas_por_materia_por_fecha(codigo, respuestas, file):
     # fecha materia1 materia2 materian
     # celda ij = data[codigo][j][i]
-    file = create_file()
-    if file is None:
-        return
-
     materias = respuestas.obtener_materias()
 
     file.write("{:<15}".format('Fecha'))  # encabezado
@@ -79,18 +66,14 @@ def horas_por_materia_por_fecha(codigo, respuestas):
         for j in range(len(materias)):
             file.write(f"{respuestas.obtener_respuestas(codigo)[j][i]:>22}")
         file.write('\n')
-    file.close()
+
     mostrar_ruta_archivo(file)
 
 
 # 4. horas totales de estudio de cada alumno en cada materia
-def total_horas_por_materia_por_codigo(respuestas):
+def total_horas_por_materia_por_codigo(respuestas, file):
     # alumno materia1 materia2 materian
     # celda ij = sumatoria k de data[i][j][k]
-    file = create_file()
-    if file is None:
-        return
-
     materias = respuestas.obtener_materias()
 
     file.write("{:<12}".format('Codigo'))
@@ -105,16 +88,12 @@ def total_horas_por_materia_por_codigo(respuestas):
                 suma += respuestas.obtener_respuestas(c)[j][k]
             file.write(f"{suma:>22}")
         file.write('\n')
-    file.close()
+
     mostrar_ruta_archivo(file)
 
 
 # 5. cuantas horas estudio cada alumno cada semana
-def total_horas_por_semana_por_codigo(respuestas):
-    file = create_file()
-    if file is None:
-        return
-
+def total_horas_por_semana_por_codigo(respuestas, file):
     cant_semanas = day_to_week(respuestas.cant_dias - 1) + 1  # el indice en el que cae el ultimo dia + 1
     file.write("{:<7}".format('Codigo'))
     for i in range(cant_semanas):  # encabezado
@@ -130,16 +109,12 @@ def total_horas_por_semana_por_codigo(respuestas):
         for s in semanas:  # recorre la lisa de sumas y va escribiendo
             file.write(f"{s:>8}")
         file.write('\n')
-    file.close()
+
     mostrar_ruta_archivo(file)
 
 
 # 6. cuantas horas estudiaron cada materia todos los alumnos por semana
-def total_horas_por_materia_por_semana(respuestas):
-    file = create_file()
-    if file is None:
-        return
-
+def total_horas_por_materia_por_semana(respuestas, file):
     materias = respuestas.obtener_materias()
 
     file.write("{:<11}".format('Semana'))  # encabezado
@@ -160,16 +135,12 @@ def total_horas_por_materia_por_semana(respuestas):
                     suma += respuestas.obtener_respuestas(c)[j][dia]
             file.write(f"{suma:>22}")
         file.write('\n')
-    file.close()
+
     mostrar_ruta_archivo(file)
 
 
 # 7. cuantos alumnos estudiaron cada materia cada semana
-def total_codigos_por_materia_por_semana(respuestas):
-    file = create_file()
-    if file is None:
-        return
-
+def total_codigos_por_materia_por_semana(respuestas, file):
     materias = respuestas.obtener_materias()
     codigos = respuestas.obtener_codigos()
 
@@ -195,46 +166,34 @@ def total_codigos_por_materia_por_semana(respuestas):
                         break  # este codigo ya sumo, dejo de buscar y paso al siguiente
             file.write(f"{contador:>22}")
         file.write('\n')
-    file.close()
+
     mostrar_ruta_archivo(file)
 
 
 # 8. cuantos registros hubo por cada alumno
-def registros_por_codigo(respuestas):
-    file = create_file()
-    if file is None:
-        return
-
+def registros_por_codigo(respuestas, file):
     contador = respuestas.cant_respuestas_por_codigo
 
     file.write("{:<10}{}".format('Codigo', 'Registros\n'))
     for c in respuestas.obtener_codigos():
         file.write(f"{c:<10}{contador[c]:>5}\n")
-    file.close()
+
     mostrar_ruta_archivo(file)
 
 
 # 9. cuantos registros hubo cada semana
-def registros_por_semana(respuestas):
-    file = create_file()
-    if file is None:
-        return
-
+def registros_por_semana(respuestas, file):
     contador = respuestas.cant_respuestas_por_semana
 
     file.write("{:<10}{}".format('Semana', 'Registros\n'))
     for i in range(len(contador)):
         file.write(f"{i + 1:<10}{contador[i]:>6}\n")
-    file.close()
+
     mostrar_ruta_archivo(file)
 
 
 # 10. cuantos alumnos respondieron en cada semana
-def codigos_por_semana(respuestas):
-    file = create_file()
-    if file is None:
-        return
-
+def codigos_por_semana(respuestas, file):
     file.write("{:<10}{}".format('Semana', 'Estudiantes\n'))
     semanas = [0] * (day_to_week(respuestas.cant_dias - 1) + 1)  # el indice en el que cae el ultimo dia + 1
     for c in respuestas.obtener_codigos():
@@ -250,5 +209,4 @@ def codigos_por_semana(respuestas):
     for i in range(len(semanas)):
         file.write(f"{i + 1:<10}{semanas[i]:>6}\n")
 
-    file.close()
     mostrar_ruta_archivo(file)
