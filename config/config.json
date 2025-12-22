@@ -1,5 +1,5 @@
 {
-    "respuestas": "Respuestas.csv",
+    "respuestas": "Respuestas_test.csv",
     "fecha_inicio": "12/8",
     "fecha_fin": "22/11",
     "lista_materias": "config/lista_materias.json",

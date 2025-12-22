@@ -1,0 +1,33 @@
+# materias que se van a considerar
+# X-Y significa que todas las materias entre la X y la Y se van a incluir, siempre que Y > X
+# X significa que la materia X se agrega individualmente
+# en los informes las materias salen en el orden en el que aparecen en este archivo
+
+1
+56
+6
+61
+25
+80
+23
+78
+26
+81
+47
+102
+24
+79
+17
+72
+43
+98
+46
+101
+52
+107
+53
+108
+22
+77
+54
+109

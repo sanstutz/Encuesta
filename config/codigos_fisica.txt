@@ -1,0 +1,8 @@
+# codigos que se van a leer
+# Xn-Xm significa que el rango de codigos con la letra X entre el numero n y el m se van a incluir, siempre que m > n
+# Xn significa que el codigo Xn se agrega individualmente
+# en los informes los codigos salen en el orden en el que aparecen en este archivo
+
+B1-B76
+L1-L36
+Q1-Q55

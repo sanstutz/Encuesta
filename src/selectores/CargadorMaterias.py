@@ -26,7 +26,6 @@ def cargar_materias(archivo_lista_materias, archivo_incluidas):
                 for materia in materias:
                     if inicio <= materia.columna <= fin:
                         materias_incluidas.append(materia)
-                        break
             except ValueError as e:
                 print("Error al procesar rango en la linea:", linea, '\n', e)
         elif len(partes) == 1:
