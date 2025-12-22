@@ -1,0 +1,12 @@
+{
+    "respuestas": "Respuestas.csv",
+    "fecha_inicio": "12/8",
+    "fecha_fin": "22/11",
+    "lista_materias": "config/lista_materias.json",
+    "codigos": "config/codigos.txt",
+    "materias": "config/materias.txt",
+    "separador": ";",
+    "encoding": "utf-8",
+    "materias_offset": 3,
+    "ruta_resultados_default": "resultados"
+}
