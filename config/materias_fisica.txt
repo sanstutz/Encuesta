@@ -3,8 +3,8 @@
 # X significa que la materia X se agrega individualmente
 # en los informes las materias salen en el orden en el que aparecen en este archivo
 
-1
-56
+0
+55
 6
 61
 25
