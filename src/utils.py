@@ -2,9 +2,9 @@ from io import TextIOWrapper
 import os
 from pathlib import Path
 from src.materia import Materia
+from collections.abc import Callable
 
-
-def obtener_parametro(nombre: str, argumentos: dict, config: dict, input_manual: function, validador: function = None, reintentar_manual: bool = True,
+def obtener_parametro(nombre: str, argumentos: dict, config: dict, input_manual: Callable[[], str] = None, validador: Callable[[str], bool] = None, reintentar_manual: bool = True,
                       error_msg: str = "El valor de {nombre} es invalido.", cerrar_con_error: bool = True):
     # primero revisar en los argumentos
     if nombre in argumentos:
@@ -47,7 +47,18 @@ def solicitar_nombre_y_ruta(msg_archivo: str, msg_ruta: str)-> tuple[str, str]:
     return archivo, ruta
 
 
-# llamada en todas las opciones para crear el archivo donde se guardan los datos
+# solicita el nombre y la ruta de un archivo y lo crea
+def obtener_archivo_manual(argumentos: dict, config: dict) -> TextIOWrapper | None:
+    nombre, ruta = solicitar_nombre_y_ruta(
+        "Ingrese el nombre del archivo (con extension) donde se guardaran los datos: ",
+        "Ingrese la ruta donde se guardara el archivo o presione enter para usar la ruta por defecto: ")
+    if ruta == "":
+        ruta = obtener_parametro("ruta_resultados_default", argumentos, config, None)
+    file = crear_archivo(nombre, ruta)
+    return file
+
+
+# crea un archivo, valida que no exista y devuelve el objeto file
 def crear_archivo(nombre: str, ruta: str, overwrite: bool = False) -> TextIOWrapper | None:
     # revisar que la ruta sea valida y exista, si no es valida pasa a la por defecto y si no existe la crea
     if len(ruta) > 0:  # no es ruta por defecto
