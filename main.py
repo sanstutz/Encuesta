@@ -229,10 +229,15 @@ def llamar_opcion_1(resultado_respuestas, config, argumentos):
             print("Ingrese al menos una materia")
 
     if len(materias_seleccionadas) == 1:
+        # una sola materia
         file = obtener_archivo_manual(argumentos, config)
         if file is not None:
-            horas_por_codigo_por_fecha(materias_seleccionadas[0], resultado_respuestas, file)
+            with file:
+                resultado = horas_por_codigo_por_fecha(materias_seleccionadas[0], resultado_respuestas)
+                file.write(resultado)
+                mostrar_ruta_archivo(file)
     else:
+        # muchos archivos
         ruta = input("Ingrese la ruta donde se guardara el archivo o presione enter para usar la ruta por defecto: ")
         if ruta == "":
             ruta = obtener_parametro("ruta_resultados_default", argumentos, config, None)
@@ -243,7 +248,10 @@ def llamar_opcion_1(resultado_respuestas, config, argumentos):
             if file is None:
                 print(f"No se pudo crear el archivo op1_{materias[m].nombre_sin_espacios}.txt en la ruta {ruta}.")
                 continue
-            horas_por_codigo_por_fecha(m, resultado_respuestas, file)
+            with file:
+                resultado = horas_por_codigo_por_fecha(m, resultado_respuestas)
+                file.write(resultado)
+                mostrar_ruta_archivo(file)
 
 
 def llamar_opcion_2(resultado_respuestas, config, argumentos):
@@ -258,9 +266,13 @@ def llamar_opcion_2(resultado_respuestas, config, argumentos):
             print("Ingrese al menos una materia")
 
     if len(materias_seleccionadas) == 1:
+        # una materia
         file = obtener_archivo_manual(argumentos, config)
         if file is not None:
-            horas_por_codigo_por_semana(materias_seleccionadas[0], resultado_respuestas, file)
+            with file:
+                resultado = horas_por_codigo_por_semana(materias_seleccionadas[0], resultado_respuestas)
+                file.write(resultado)
+                mostrar_ruta_archivo(file)
     else:
         ruta = input("Ingrese la ruta donde se guardara el archivo o presione enter para usar la ruta por defecto: ")
         if ruta == "":
@@ -272,11 +284,15 @@ def llamar_opcion_2(resultado_respuestas, config, argumentos):
             if file is None:
                 print(f"No se pudo crear el archivo op1_{materias[m].nombre_sin_espacios}.txt en la ruta {ruta}.")
                 continue
-            horas_por_codigo_por_semana(m, resultado_respuestas, file)
+            with file:
+                resultado = horas_por_codigo_por_semana(m, resultado_respuestas)
+                file.write(resultado)
+                mostrar_ruta_archivo(file)
 
 
 def llamar_opcion_3(resultado_respuestas, config, argumentos):
     codigos_seleccionados = None
+
     while codigos_seleccionados is None or len(codigos_seleccionados) == 0:
         inputs = input("Ingrese el/los codigos de los alumnos separados por coma: ")
         codigos_seleccionados = parsear_codigos(inputs, resultado_respuestas.obtener_codigos())
@@ -284,9 +300,13 @@ def llamar_opcion_3(resultado_respuestas, config, argumentos):
             print("Ingrese al menos un codigo")
 
     if len(codigos_seleccionados) == 1:
+        # un codigo
         file = obtener_archivo_manual(argumentos, config)
         if file is not None:
-            horas_por_materia_por_fecha(codigos_seleccionados[0], resultado_respuestas, file)
+            with file:
+                resultado = horas_por_materia_por_fecha(codigos_seleccionados[0], resultado_respuestas)
+                file.write(resultado)
+                mostrar_ruta_archivo(file)
     else:
         ruta = input("Ingrese la ruta donde se guardara el archivo o presione enter para usar la ruta por defecto: ")
         if ruta == "":
@@ -298,49 +318,71 @@ def llamar_opcion_3(resultado_respuestas, config, argumentos):
             if file is None:
                 print(f"No se pudo crear el archivo op3_{codigo}.txt en la ruta {ruta}.")
                 continue
-            horas_por_materia_por_fecha(codigo, resultado_respuestas, file)
+            with file:
+                resultado = horas_por_materia_por_fecha(codigo, resultado_respuestas)
+                file.write(resultado)
+                mostrar_ruta_archivo(file)
 
 
 def llamar_opcion_4(resultado_respuestas, config, argumentos):
     file = obtener_archivo_manual(argumentos, config)
     if file is not None:
-        total_horas_por_materia_por_codigo(resultado_respuestas, file)
+        with file:
+            resultado = total_horas_por_materia_por_codigo(resultado_respuestas)
+            file.write(resultado)
+            mostrar_ruta_archivo(file)
 
 
 def llamar_opcion_5(resultado_respuestas, config, argumentos):
     file = obtener_archivo_manual(argumentos, config)
     if file is not None:
-        total_horas_por_semana_por_codigo(resultado_respuestas, file)
+        with file:
+            resultado = total_horas_por_semana_por_codigo(resultado_respuestas)
+            file.write(resultado)
+            mostrar_ruta_archivo(file)
 
 
 def llamar_opcion_6(resultado_respuestas, config, argumentos):
     file = obtener_archivo_manual(argumentos, config)
     if file is not None:
-        total_horas_por_materia_por_semana(resultado_respuestas, file)
+        with file:
+            resultado = total_horas_por_materia_por_semana(resultado_respuestas)
+            file.write(resultado)
+            mostrar_ruta_archivo(file)
 
 
 def llamar_opcion_7(resultado_respuestas, config, argumentos):
     file = obtener_archivo_manual(argumentos, config)
     if file is not None:
-        total_codigos_por_materia_por_semana(resultado_respuestas, file)
+        with file:
+            resultado = total_codigos_por_materia_por_semana(resultado_respuestas)
+            file.write(resultado)
+            mostrar_ruta_archivo(file)
 
 
 def llamar_opcion_8(resultado_respuestas, config, argumentos):
     file = obtener_archivo_manual(argumentos, config)
     if file is not None:
-        registros_por_codigo(resultado_respuestas, file)
+        with file:
+            resultado = registros_por_codigo(resultado_respuestas)
+            file.write(resultado)
+            mostrar_ruta_archivo(file)
 
 
 def llamar_opcion_9(resultado_respuestas, config, argumentos):
     file = obtener_archivo_manual(argumentos, config)
     if file is not None:
-        registros_por_semana(resultado_respuestas, file)
+        with file:
+            resultado = registros_por_semana(resultado_respuestas)
+            file.write(resultado)
+            mostrar_ruta_archivo(file)
 
 
 def llamar_opcion_10(resultado_respuestas, config, argumentos):
     file = obtener_archivo_manual(argumentos, config)
     if file is not None:
-        codigos_por_semana(resultado_respuestas, file)
+        with file:
+            codigos_por_semana(resultado_respuestas, file)
 
 if __name__ == '__main__':
     main()

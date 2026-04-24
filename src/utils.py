@@ -1,9 +1,11 @@
+from io import TextIOWrapper
 import os
 from pathlib import Path
+from src.materia import Materia
 
 
-def obtener_parametro(nombre, argumentos, config, input_manual, validador=None, reintentar_manual=True,
-                      error_msg="El valor de {nombre} es invalido.", cerrar_con_error=True):
+def obtener_parametro(nombre: str, argumentos: dict, config: dict, input_manual: function, validador: function = None, reintentar_manual: bool = True,
+                      error_msg: str = "El valor de {nombre} es invalido.", cerrar_con_error: bool = True):
     # primero revisar en los argumentos
     if nombre in argumentos:
         valor = argumentos[nombre]
@@ -34,7 +36,7 @@ def obtener_parametro(nombre, argumentos, config, input_manual, validador=None, 
         return None
 
 
-def solicitar_nombre_y_ruta(msg_archivo, msg_ruta):
+def solicitar_nombre_y_ruta(msg_archivo: str, msg_ruta: str)-> tuple[str, str]:
     # "Ingrese el nombre del archivo (con extension) donde se guardaran los datos: "
     archivo = input(msg_archivo)
     while archivo == "":
@@ -46,7 +48,7 @@ def solicitar_nombre_y_ruta(msg_archivo, msg_ruta):
 
 
 # llamada en todas las opciones para crear el archivo donde se guardan los datos
-def crear_archivo(nombre, ruta, overwrite=False):
+def crear_archivo(nombre: str, ruta: str, overwrite: bool = False) -> TextIOWrapper | None:
     # revisar que la ruta sea valida y exista, si no es valida pasa a la por defecto y si no existe la crea
     if len(ruta) > 0:  # no es ruta por defecto
         ruta = ruta.replace('\\', '/')  # ya se que Windows usa \ pero las dos barras funcionan
@@ -68,11 +70,11 @@ def crear_archivo(nombre, ruta, overwrite=False):
         # recursividad, mejor que vuelva al menu y el usuario decida si quiere volver a intentar
 
 
-def mostrar_ruta_archivo(file):
+def mostrar_ruta_archivo(file: TextIOWrapper):
     print("\nArchivo creado en " + os.path.abspath(file.name))
 
 
-def solicitar_archivo_existente(msg="Ingrese la ruta del archivo:\n"):
+def solicitar_archivo_existente(msg: str = "Ingrese la ruta del archivo:\n") -> str:
     path = input(msg)
     file = Path(path)
     while not file.is_file():
@@ -81,11 +83,11 @@ def solicitar_archivo_existente(msg="Ingrese la ruta del archivo:\n"):
     return path
 
 
-def es_archivo_existente(path):
+def es_archivo_existente(path: str) -> bool:
     return Path(path).is_file()
 
 
-def solicitar_fecha(msg="Ingrese la fecha en formato dd/mm:\n"):
+def solicitar_fecha(msg: str = "Ingrese la fecha en formato dd/mm:\n") -> str:
     date = input(msg)
     while not validar_fecha(date):
         date = input("Formato invalido. " + msg + "\n")
@@ -93,7 +95,7 @@ def solicitar_fecha(msg="Ingrese la fecha en formato dd/mm:\n"):
 
 
 # se asegura que los codigos esten todos con el mismo formato (letra en mayuscula, numeros sin 0 a la izquierda)
-def format_code(cod):
+def format_code(cod: str) -> str | None:
     try:
         codigo = cod.strip()
         letra = codigo[0].upper()
@@ -105,14 +107,14 @@ def format_code(cod):
         return None
 
 
-def listar_materias(materias):
+def listar_materias(materias: list[Materia]):
     print("Listado de Materias:")
     for i in range(len(materias)):  # las lista con su indice + 1 para que el usuario pueda ingresar el numero
         print(f"{i + 1}: " + materias[i].nombre_corto)  # el nombre de la materia en el indice i
 
 
 # transorma una fecha en formato string dd/mm en el numero de dia correspondiente partiendo de una fecha inicial
-def date_to_int(date, start_date, end_date):
+def date_to_int(date: str, start_date: str, end_date: str) -> int:
     days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     start = start_date.split('/')
     start_day, start_month = int(start[0]), int(start[1])
@@ -149,7 +151,7 @@ def date_to_int(date, start_date, end_date):
 
 
 # transforma un entero positivo en el dia correspondiente contando desde la fecha inicial y sin pasar la final
-def int_to_date(i, start_date, end_date, united=False):
+def int_to_date(i: int, start_date: str, end_date: str, united: bool = False) -> str | tuple[str, str]:
     days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     start = start_date.split('/')
     start_day, start_month = int(start[0]), int(start[1])
@@ -189,11 +191,12 @@ def int_to_date(i, start_date, end_date, united=False):
 
 
 # recibe el indice de un dia y devuelve en que semana estuvo, partiendo de la semana 0 (asumiendo que el dia 0 es lunes)
-def day_to_week(i):
+def day_to_week(i: int) -> int:
     return i // 7
 
 
-def validar_fecha(fecha):
+# valida que la fecha este en formato dd/mm y que el dia y el mes sean validos
+def validar_fecha(fecha: str) -> bool:
     try:
         d, m = fecha.split('/')
         d = int(d)
@@ -205,8 +208,8 @@ def validar_fecha(fecha):
         return False
 
 
-# no tiene en cuenta si la fecha existe
-def fecha_es_anterior(fecha1, fecha2):
+# verifica si la fecha 1 es anterior a la fecha 2
+def fecha_es_anterior(fecha1: str, fecha2: str) -> bool:
     try:
         d1, m1 = fecha1.split('/')
         d2, m2 = fecha2.split('/')
@@ -224,7 +227,7 @@ def fecha_es_anterior(fecha1, fecha2):
         return False
 
 
-def cerrar_programa_con_error(msg):
+def cerrar_programa_con_error(msg: str):
     print(msg)
     input()
     exit(1)
