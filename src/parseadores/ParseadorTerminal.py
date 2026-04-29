@@ -1,8 +1,11 @@
 from src.utils import format_code
 
 
-def parsear_materias(inputs, cant_materias):
+def parsear_materias(inputs: str, cant_materias: int):
     partes = inputs.split(',')
+    if len(partes) == 0:
+        print("No se ingresaron materias.")
+        return None
     materias = []
     for p in partes:
         try:
@@ -18,7 +21,7 @@ def parsear_materias(inputs, cant_materias):
     return materias
 
 
-def parsear_codigos(inputs, codigos_disponibles):
+def parsear_codigos(inputs: str, codigos_disponibles: list):
     partes = inputs.split(',')
     codigos = []
     for p in partes:

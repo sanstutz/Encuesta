@@ -4,7 +4,7 @@ from pathlib import Path
 from src.materia import Materia
 from collections.abc import Callable
 
-def obtener_parametro(nombre: str, argumentos: dict, config: dict, input_manual: Callable[[], str] = None, validador: Callable[[str], bool] = None, reintentar_manual: bool = True,
+def obtener_parametro(nombre: str, argumentos: dict, config: dict = None, input_manual: Callable[[], str] = None, validador: Callable[[str], bool] = None, reintentar_manual: bool = True,
                       error_msg: str = "El valor de {nombre} es invalido.", cerrar_con_error: bool = True):
     # primero revisar en los argumentos
     if nombre in argumentos:

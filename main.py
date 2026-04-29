@@ -37,7 +37,45 @@ def main():
     # cargar las respuestas
     resultado_respuestas = cargar_respuestas(lector_respuestas, config, argumentos)
 
-    out = OutputArchivo()
+    # obtener el destino
+    tipo_output = obtener_parametro("output", argumentos, config)
+    if tipo_output == "consola":
+        out = OutputConsola()
+    else:
+        out = OutputArchivo()
+        if tipo_output is None or tipo_output != "archivo":
+            print("No se especifico un tipo de output valido. Se usara output a archivo por defecto.")
+
+    # opciones automaticas
+    funciones_auto = obtener_funciones_auto(argumentos)
+    if len(funciones_auto) > 0:
+        for f in funciones_auto:
+            codigo = f.get("f", -1)
+            params = f.get("p", "")
+            if codigo == 0:
+                exit()
+            if codigo == 1:
+                llamar_opcion_1(resultado_respuestas, config, argumentos, out, params)
+            elif codigo == 2:
+                llamar_opcion_2(resultado_respuestas, config, argumentos, out, params)
+            elif codigo == 3:
+                llamar_opcion_3(resultado_respuestas, config, argumentos, out, params)
+            elif codigo == 4:
+                llamar_opcion_4(resultado_respuestas, config, argumentos, out, params)
+            elif codigo == 5:
+                llamar_opcion_5(resultado_respuestas, config, argumentos, out, params)
+            elif codigo == 6:
+                llamar_opcion_6(resultado_respuestas, config, argumentos, out, params)
+            elif codigo == 7:
+                llamar_opcion_7(resultado_respuestas, config, argumentos, out, params)
+            elif codigo == 8:
+                llamar_opcion_8(resultado_respuestas, config, argumentos, out, params)
+            elif codigo == 9:
+                llamar_opcion_9(resultado_respuestas, config, argumentos, out, params)
+            elif codigo == 10:
+                llamar_opcion_10(resultado_respuestas, config, argumentos, out, params)
+            else:
+                cerrar_programa_con_error(f"Error: la funcion {codigo} no es una opcion valida.")
 
     # menu de opciones
     opcion = -1
@@ -73,7 +111,7 @@ def main():
 
 
 # guarda los argumentos pasados por linea de comando en un diccionario
-def parsear_argumentos(arguments):
+def parsear_argumentos(arguments: list[str]):
     argumentos = dict()
     for a in arguments:
         try:
@@ -85,7 +123,7 @@ def parsear_argumentos(arguments):
 
 
 # lee el archivo de configuracion en formato json
-def leer_config(config_path):
+def leer_config(config_path: str):
     try:
         with open(config_path, 'rt', encoding='utf-8') as config_file:
             config = json.load(config_file)
@@ -194,6 +232,17 @@ def cargar_respuestas(lector, config, argumentos):
         cerrar_programa_con_error("Error al cargar respuestas: " + str(e))
 
 
+def obtener_funciones_auto(argumentos: dict) -> list[dict]:
+    funciones_json = obtener_parametro("acciones", argumentos)
+    if funciones_json is None:
+        return list()
+    try:
+        funciones = json.loads(funciones_json)            
+        return funciones
+    except JSONDecodeError:
+        cerrar_programa_con_error("Error: el valor de 'acciones' no es un JSON valido.")
+
+
 def listar_opciones():
     print('\nOpciones:\n'
           '1: Para una determinada materia, ver cuanto estudio cada alumno cada dia.\n'
@@ -209,107 +258,123 @@ def listar_opciones():
           '0: Salir.')
 
 
-def llamar_opcion_1(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output):
+def llamar_opcion_1(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output, default: str = None):
     materias = resultado_respuestas.obtener_materias()
-    listar_materias(materias)
 
-    materias_seleccionadas = None
-    while materias_seleccionadas is None or len(materias_seleccionadas) == 0:
-        inputs = input("Ingrese la(s) materia(s) separadas por coma: ")
-        materias_seleccionadas = parsear_materias(inputs, len(materias))
-        if materias_seleccionadas is not None and len(materias_seleccionadas) == 0:
-            print("Ingrese al menos una materia")
+    if default is not None:
+        materias_seleccionadas = parsear_materias(default, len(materias))
+        if materias_seleccionadas is None or len(materias_seleccionadas) == 0:
+            cerrar_programa_con_error("Error: el valor de 'params' para la funcion 1 no es valido.")
+    else:
+        listar_materias(materias)
+
+        materias_seleccionadas = None
+        while materias_seleccionadas is None or len(materias_seleccionadas) == 0:
+            inputs = input("Ingrese la(s) materia(s) separadas por coma: ")
+            materias_seleccionadas = parsear_materias(inputs, len(materias))
+            if materias_seleccionadas is not None and len(materias_seleccionadas) == 0:
+                print("Ingrese al menos una materia")
 
     if len(materias_seleccionadas) == 1:
         # una sola materia
         resultado = horas_por_codigo_por_fecha(materias_seleccionadas[0], resultado_respuestas)
-        out.mostrar_output(resultado, argumentos, config)
+        out.mostrar_output(resultado, argumentos, config, default is not None)
     else:
         # muchos archivos
         resultados = []
         for m in materias_seleccionadas:
             resultado = horas_por_codigo_por_fecha(m, resultado_respuestas)
             resultados.append(resultado)
-        out.mostrar_multiples_output(resultados, argumentos, config, "op1")
+        out.mostrar_multiples_output(resultados, argumentos, config, "op1", default is not None)
 
 
-def llamar_opcion_2(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output):
+def llamar_opcion_2(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output, default: str = None):
     materias = resultado_respuestas.obtener_materias()
-    listar_materias(materias)
 
-    materias_seleccionadas = None
-    while materias_seleccionadas is None or len(materias_seleccionadas) == 0:
-        inputs = input("Ingrese la(s) materia(s) separadas por coma: ")
-        materias_seleccionadas = parsear_materias(inputs, len(materias))
-        if materias_seleccionadas is not None and len(materias_seleccionadas) == 0:
-            print("Ingrese al menos una materia")
+    if default is not None:
+        materias_seleccionadas = parsear_materias(default, len(materias))
+        if materias_seleccionadas is None or len(materias_seleccionadas) == 0:
+            cerrar_programa_con_error("Error: el valor de 'params' para la funcion 2 no es valido.")
+    else:
+        listar_materias(materias)
+
+        materias_seleccionadas = None
+        while materias_seleccionadas is None or len(materias_seleccionadas) == 0:
+            inputs = input("Ingrese la(s) materia(s) separadas por coma: ")
+            materias_seleccionadas = parsear_materias(inputs, len(materias))
+            if materias_seleccionadas is not None and len(materias_seleccionadas) == 0:
+                print("Ingrese al menos una materia")
 
     if len(materias_seleccionadas) == 1:
         # una materia
         resultado = horas_por_codigo_por_semana(materias_seleccionadas[0], resultado_respuestas)
-        out.mostrar_output(resultado, argumentos, config)
+        out.mostrar_output(resultado, argumentos, config, default is not None)
     else:
         resultados = []
         for m in materias_seleccionadas:
             resultado = horas_por_codigo_por_semana(m, resultado_respuestas)
             resultados.append(resultado)
-        out.mostrar_multiples_output(resultados, argumentos, config, "op2")
+        out.mostrar_multiples_output(resultados, argumentos, config, "op2", default is not None)
 
 
-def llamar_opcion_3(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output):
-    codigos_seleccionados = None
-
-    while codigos_seleccionados is None or len(codigos_seleccionados) == 0:
-        inputs = input("Ingrese el/los codigos de los alumnos separados por coma: ")
-        codigos_seleccionados = parsear_codigos(inputs, resultado_respuestas.obtener_codigos())
-        if codigos_seleccionados is not None and len(codigos_seleccionados) == 0:
-            print("Ingrese al menos un codigo")
+def llamar_opcion_3(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output, default: str = None):
+    if default is not None:
+        codigos_seleccionados = parsear_codigos(default, resultado_respuestas.obtener_codigos())
+        if codigos_seleccionados is None or len(codigos_seleccionados) == 0:
+            cerrar_programa_con_error("Error: el valor de 'params' para la funcion 3 no es valido.")
+    else:
+        codigos_seleccionados = None
+        while codigos_seleccionados is None or len(codigos_seleccionados) == 0:
+            inputs = input("Ingrese el/los codigos de los alumnos separados por coma: ")
+            codigos_seleccionados = parsear_codigos(inputs, resultado_respuestas.obtener_codigos())
+            if codigos_seleccionados is not None and len(codigos_seleccionados) == 0:
+                print("Ingrese al menos un codigo")
 
     if len(codigos_seleccionados) == 1:
         # un codigo
         resultado = horas_por_materia_por_fecha(codigos_seleccionados[0], resultado_respuestas)
-        out.mostrar_output(resultado, argumentos, config)
+        out.mostrar_output(resultado, argumentos, config, default is not None)
     else:
         resultados = []
         for codigo in codigos_seleccionados:
             resultado = horas_por_materia_por_fecha(codigo, resultado_respuestas)
             resultados.append(resultado)
-        out.mostrar_multiples_output(resultados, argumentos, config, "op3")
+        out.mostrar_multiples_output(resultados, argumentos, config, "op3", default is not None)
 
 
-def llamar_opcion_4(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output):
+def llamar_opcion_4(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output, default = None):
     resultado = total_horas_por_materia_por_codigo(resultado_respuestas)
-    out.mostrar_output(resultado, argumentos, config)
+    out.mostrar_output(resultado, argumentos, config, default is not None)
 
 
-def llamar_opcion_5(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output):
+def llamar_opcion_5(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output, default = None):
     resultado = total_horas_por_semana_por_codigo(resultado_respuestas)
-    out.mostrar_output(resultado, argumentos, config)
+    out.mostrar_output(resultado, argumentos, config, default is not None)
 
 
-def llamar_opcion_6(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output):
+def llamar_opcion_6(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output, default = None):
     resultado = total_horas_por_materia_por_semana(resultado_respuestas)
-    out.mostrar_output(resultado, argumentos, config)
+    out.mostrar_output(resultado, argumentos, config, default is not None)
 
 
-def llamar_opcion_7(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output):
+def llamar_opcion_7(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output, default = None):
     resultado = total_codigos_por_materia_por_semana(resultado_respuestas)
-    out.mostrar_output(resultado, argumentos, config)
+    out.mostrar_output(resultado, argumentos, config, default is not None)
 
 
-def llamar_opcion_8(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output):
+def llamar_opcion_8(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output, default = None):
     resultado = registros_por_codigo(resultado_respuestas)
-    out.mostrar_output(resultado, argumentos, config)
+    out.mostrar_output(resultado, argumentos, config, default is not None)
 
 
-def llamar_opcion_9(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output):
+def llamar_opcion_9(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output, default = None):
     resultado = registros_por_semana(resultado_respuestas)
-    out.mostrar_output(resultado, argumentos, config)
+    out.mostrar_output(resultado, argumentos, config, default is not None)
 
 
-def llamar_opcion_10(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output):
+def llamar_opcion_10(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output, default = None):
     resultado = codigos_por_semana(resultado_respuestas)
-    out.mostrar_output(resultado, argumentos, config)
+    out.mostrar_output(resultado, argumentos, config, default is not None)
 
 if __name__ == '__main__':
     main()
