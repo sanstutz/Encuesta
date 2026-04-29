@@ -2,7 +2,7 @@ from src.utils import solicitar_nombre_y_ruta, crear_archivo, mostrar_ruta_archi
 
 
 class Output:
-    def mostrar_output(self, contenido: str, args: dict, config: dict, auto: bool = False):
+    def mostrar_output(self, contenido: str, args: dict, config: dict, nombre_default: str = "Resultados", auto: bool = False):
         pass
 
     def mostrar_multiples_output(self, contenido: list[str], args: dict, config: dict, nombre_default: str = "Resultados", auto: bool = False):
@@ -10,7 +10,7 @@ class Output:
 
 
 class OutputConsola(Output):
-    def mostrar_output(self, contenido: str, args: dict, config: dict, auto: bool = False):
+    def mostrar_output(self, contenido: str, args: dict, config: dict, nombre_default: str = "", auto: bool = False):
         print(contenido)
 
     def mostrar_multiples_output(self, contenido: list[str], args: dict, config: dict, nombre_default: str = "", auto: bool = False):
@@ -19,13 +19,13 @@ class OutputConsola(Output):
 
 
 class OutputArchivo(Output):
-    def mostrar_output(self, contenido: str, args: dict, config: dict, auto: bool = False):
+    def mostrar_output(self, contenido: str, args: dict, config: dict, nombre_default: str = "Resultados", auto: bool = False):
         nombre, ruta = solicitar_nombre_y_ruta(
             "Ingrese el nombre del archivo (con extension) donde se guardaran los datos: ",
-            "Ingrese la ruta donde se guardara el archivo o presione enter para usar la ruta por defecto: ") if not auto else "", ""
+            "Ingrese la ruta donde se guardara el archivo o presione enter para usar la ruta por defecto: ") if not auto else (nombre_default + ".txt", "")
         if ruta == "":
             ruta = obtener_parametro("ruta_resultados_default", args, config)
-        file = crear_archivo(nombre, ruta)
+        file = crear_archivo(nombre, ruta, auto)
         if file is not None:
             with file:
                 file.write(contenido)

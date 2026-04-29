@@ -278,7 +278,7 @@ def llamar_opcion_1(resultado_respuestas: ResultadoRespuestas, config: dict, arg
     if len(materias_seleccionadas) == 1:
         # una sola materia
         resultado = horas_por_codigo_por_fecha(materias_seleccionadas[0], resultado_respuestas)
-        out.mostrar_output(resultado, argumentos, config, default is not None)
+        out.mostrar_output(resultado, argumentos, config, "op1", default is not None)
     else:
         # muchos archivos
         resultados = []
@@ -308,7 +308,7 @@ def llamar_opcion_2(resultado_respuestas: ResultadoRespuestas, config: dict, arg
     if len(materias_seleccionadas) == 1:
         # una materia
         resultado = horas_por_codigo_por_semana(materias_seleccionadas[0], resultado_respuestas)
-        out.mostrar_output(resultado, argumentos, config, default is not None)
+        out.mostrar_output(resultado, argumentos, config, "op2", default is not None)
     else:
         resultados = []
         for m in materias_seleccionadas:
@@ -333,7 +333,7 @@ def llamar_opcion_3(resultado_respuestas: ResultadoRespuestas, config: dict, arg
     if len(codigos_seleccionados) == 1:
         # un codigo
         resultado = horas_por_materia_por_fecha(codigos_seleccionados[0], resultado_respuestas)
-        out.mostrar_output(resultado, argumentos, config, default is not None)
+        out.mostrar_output(resultado, argumentos, config, "op3", default is not None)
     else:
         resultados = []
         for codigo in codigos_seleccionados:
@@ -344,37 +344,37 @@ def llamar_opcion_3(resultado_respuestas: ResultadoRespuestas, config: dict, arg
 
 def llamar_opcion_4(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output, default = None):
     resultado = total_horas_por_materia_por_codigo(resultado_respuestas)
-    out.mostrar_output(resultado, argumentos, config, default is not None)
+    out.mostrar_output(resultado, argumentos, config, "op4", default is not None)
 
 
 def llamar_opcion_5(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output, default = None):
     resultado = total_horas_por_semana_por_codigo(resultado_respuestas)
-    out.mostrar_output(resultado, argumentos, config, default is not None)
+    out.mostrar_output(resultado, argumentos, config, "op5", default is not None)
 
 
 def llamar_opcion_6(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output, default = None):
     resultado = total_horas_por_materia_por_semana(resultado_respuestas)
-    out.mostrar_output(resultado, argumentos, config, default is not None)
+    out.mostrar_output(resultado, argumentos, config, "op6", default is not None)
 
 
 def llamar_opcion_7(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output, default = None):
     resultado = total_codigos_por_materia_por_semana(resultado_respuestas)
-    out.mostrar_output(resultado, argumentos, config, default is not None)
+    out.mostrar_output(resultado, argumentos, config, "op7", default is not None)
 
 
 def llamar_opcion_8(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output, default = None):
     resultado = registros_por_codigo(resultado_respuestas)
-    out.mostrar_output(resultado, argumentos, config, default is not None)
+    out.mostrar_output(resultado, argumentos, config, "op8", default is not None)
 
 
 def llamar_opcion_9(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output, default = None):
     resultado = registros_por_semana(resultado_respuestas)
-    out.mostrar_output(resultado, argumentos, config, default is not None)
+    out.mostrar_output(resultado, argumentos, config, "op9", default is not None)
 
 
 def llamar_opcion_10(resultado_respuestas: ResultadoRespuestas, config: dict, argumentos: dict, out: Output, default = None):
     resultado = codigos_por_semana(resultado_respuestas)
-    out.mostrar_output(resultado, argumentos, config, default is not None)
+    out.mostrar_output(resultado, argumentos, config, "op10", default is not None)
 
 if __name__ == '__main__':
     main()
